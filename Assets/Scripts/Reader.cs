@@ -10,20 +10,27 @@ using SFB;
 
 public class Reader : MonoBehaviour
 {
-    public TMP_InputField task, file, first, last, sample, ans;
-
+    public TMP_InputField task, file, first, last, sample, ans, year, razina;
+    public TMP_Dropdown vrsta;
+    public GameObject panel;
+    int honi;
 
     public void Main()
     {
         string filePath = file.text;
         int startPage = Int32.Parse(first.text);
         int endPage = Int32.Parse(last.text);
+        var level = razina.text;
+        int godina = Int32.Parse(year.text);
         string samplePath = sample.text;
         string name = task.text;
         string dummy_in = ".dummy.in.";
         string dummy_out = ".dummy.out.";
-
         Settings settings = new Settings();
+        if (level[0] == 'Z')
+            level = "ŽUP";
+        if (level[0] == 'S')
+            level = "ŠKO";
 
         String text = "";
         using (PdfReader reader = new PdfReader(filePath))
@@ -32,8 +39,51 @@ public class Reader : MonoBehaviour
             {
                 var page = PdfTextExtractor.GetTextFromPage(reader, i, new SimpleTextExtractionStrategy());
                 page = Regex.Replace(page, settings.UnusualCharacters, "").Trim();
-                page = Regex.Replace(page, settings.Header, "").Trim();
-
+                Debug.Log(page);
+                if (honi == 0){
+                    page = Regex.Replace(page, settings.Header, "").Trim();
+                } else{
+                    if (godina == 2018){
+                        //za dodati
+                    } else if (godina == 2017 || godina == 2016){
+                        int pos = 0;
+                        for (; pos < page.Length; ++pos)
+                            if (page[pos] == level[0])
+                                break;
+                        for (; pos < page.Length; ++pos){
+                            if (page.Substring(pos, 6) == "bodova"){
+                                pos += 6;
+                                break;
+                            }
+                        }
+                        page = page.Substring(pos, page.Length - pos);
+                    } else {
+                        int pos = 0;
+                        for (; pos < page.Length; ++pos)
+                        {
+                            Debug.Log(page[pos] + " " + level[0]);
+                            if (page[pos] == level[0])
+                                break;
+                        }
+                        Debug.Log(pos);
+                        for (; pos < page.Length; ++pos)
+                        {
+                            bool ok = true;
+                            for (int k = 0; k < name.Length; ++k)
+                            {
+                                if (page[k + pos] != name[k])
+                                    ok = false;
+                            }
+                            if (ok)
+                            {
+                                pos += name.Length;
+                                break;
+                            }
+                        }
+                        page = page.Substring(pos + 9, page.Length - pos - 9);
+                    }
+                }
+                Debug.Log(page);
                 text = text + " " + page;
             }
 
@@ -44,11 +94,7 @@ public class Reader : MonoBehaviour
 
             bool hasScoring = scoringHeader.Success;
 
-            int x = 0;
-            while (text[x] == ' ')
-                x++;
-
-            string body = text.Substring(x, inputHeader.Index - x);
+            string body = text.Substring(0, inputHeader.Index);
             int start = inputHeader.Index + inputHeader.Length;
             string input = text.Substring(start, outputHeader.Index - start);
             string output;
@@ -104,10 +150,10 @@ public class Reader : MonoBehaviour
             string sol = "";
 
 
-            sol = body + "##Ulazni​ podaci" + input + "##Izlazni podaci" + output;
+            sol = body + "\n" + "##Ulazni​ podaci" + "\n" + input + "\n" + "##Izlazni podaci" + "\n" + output;
             if (hasScoring)
-                sol += "##Bodovanje" + scoring;
-            sol += "##Primjeri test​ podataka" + primjeri;
+                sol += "\n" + "##Bodovanje" +"\n" + scoring;
+            sol += "\n" +"##Primjeri test​ podataka" + "\n" + primjeri;
 
             ans.text = sol;
         }
@@ -174,15 +220,31 @@ public class Reader : MonoBehaviour
 
     public void openPDF()
     {
-        string path = StandaloneFileBrowser.OpenFilePanel("Open pdf", "", "pdf", false)[0];
+        var put = StandaloneFileBrowser.OpenFilePanel("Open pdf", "", "pdf", false);
+        if (put.Length >= 1) {
+            string path = put[0];
 
-        file.text = path;
+            file.text = path;
+        }
     }
 
     public void openSample()
     {
-        string path = StandaloneFileBrowser.OpenFolderPanel("Open pdf", "", false)[0];
+        var put = StandaloneFileBrowser.OpenFolderPanel("Open folder", "", false);
+        if (put.Length >= 1)
+        {
+            string path = put[0];
 
-        sample.text = path;
+            sample.text = path;
+        }
+    }
+
+    void Update()
+    {
+        honi = vrsta.value;
+        if (honi == 1)
+            panel.SetActive(false);
+        else
+            panel.SetActive(true);
     }
 }
