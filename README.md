@@ -5,7 +5,7 @@ With this app you can easily convert PDF to Mardown format.
 
 Enter the name of task in field **Zadatak** (you need to write the same as pdf).
 
-Then you choose either **Honi or **Infokup** for contest.
+Then you choose either **Honi** or **Infokup** for contest.
 
 Click on **add pdf** icon and choose pdf with taks.
 
