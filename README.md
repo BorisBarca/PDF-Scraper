@@ -17,7 +17,9 @@ Click on **folder** icon to chose folder of your test cases.
 
 ### Only if you choose INFOKUP
 
-Enter the contest level (eg. ZUPANIJSKO) **Don't use non ascii letters like Š and Ž**.
+Enter the contest level (eg. ZUPANIJSKO) 
+
+**WARNING: Don't use letters like Š and Ž**.
 
 Enter the year of contest.
 
