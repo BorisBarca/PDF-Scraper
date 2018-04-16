@@ -21,3 +21,5 @@ Enter the year of contest.
 
 After you done all of that click Convert.
 
+**DOWNLOAD APPLICATION FOLDER TO USE**
+
