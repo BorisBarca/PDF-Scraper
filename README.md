@@ -3,6 +3,8 @@ With this app you can easily convert PDF to Mardown format.
 
 # How-to
 
+Download application folder to use and open PDFScrapper.exe
+
 Enter the name of task in field **Zadatak** (you need to write the same as pdf).
 
 Then you choose either **Honi** or **Infokup** for contest.
@@ -20,6 +22,4 @@ Enter the contest level (eg. ZUPANIJSKO) **Don't use non ascii letters like Š a
 Enter the year of contest.
 
 After you done all of that click Convert.
-
-**DOWNLOAD APPLICATION FOLDER TO USE**
 
